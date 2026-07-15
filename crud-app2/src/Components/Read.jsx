@@ -9,6 +9,7 @@ const Read = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const navigate = useNavigate();
 
   function handleDelete(id) {
@@ -69,6 +70,13 @@ const Read = () => {
     eachData.email.toLowerCase().includes(search.toLowerCase())
   );
 });
+const sortedData = [...filteredData].sort((a, b) => {
+  if (sortOrder === "asc") {
+    return a.name.localeCompare(b.name);
+  } else {
+    return b.name.localeCompare(a.name);
+  }
+});
 
   return (
     <>
@@ -81,7 +89,15 @@ const Read = () => {
     value={search}
     onChange={(e) => setSearch(e.target.value)}
   />
-</div>
+  </div>
+  <button
+  className="btn btn-secondary mb-3"
+  onClick={() =>
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+  }
+  >
+  Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
+  </button>
 
       <table className="table">
         <thead>
@@ -102,7 +118,7 @@ const Read = () => {
       </td>
     </tr>
   ) : (
-    filteredData.map((eachData) => (
+    sortedData.map((eachData) => (
       <tr key={eachData.id}>
         <th>{eachData.id}</th>
         <td>{eachData.name}</td>
